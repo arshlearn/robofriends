@@ -15,7 +15,6 @@ const App = () => {
         }).then(users => {
             SetRobots(users)
         })
-        console.log(Robots, SearchField)
     }, [])
 
     const OnSearchChange = (event) => {
