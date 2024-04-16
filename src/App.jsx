@@ -1,44 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CardList from "./Components/CardList";
 import SearchBox from "./Components/SearchBox";
 import Scroll from "./Components/Scroll"
 import "./App.css"
 
-class App extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            robots: [],
-            SearchField: ""
-        }
-    }
+const App = () => {
 
-    componentDidMount() {
+    const [Robots, SetRobots] = useState([])
+    const [SearchField, SetSearchField] = useState("")
+
+    useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/users").then(response => {
             return response.json()
         }).then(users => {
-            this.setState({robots: users})
+            SetRobots(users)
         })
-    }
+        console.log(Robots, SearchField)
+    }, [])
 
-    OnSearchChange = (event) => {
-        this.setState({ SearchField: event.target.value })
+    const OnSearchChange = (event) => {
+        SetSearchField(event.target.value)
     }
-
-    render() {
-        const FilteredRobots = this.state.robots.filter(robots => {
+        const FilteredRobots = Robots.filter(Robot => {
             return (
-                robots.name.toLowerCase().includes(this.state.SearchField.toLowerCase())
+                Robot.name.toLowerCase().includes(SearchField.toLowerCase())
             )
         })
 
-        if (this.state.robots.length === 0) {
+        if (Robots.length === 0) {
             return <h1 className="tc">Loading...</h1>
         } else {
            return (
             <div className="tc">
                 <h1 className="f1">RoboFriends</h1>
-                <SearchBox SearchChange={this.OnSearchChange} />
+                <SearchBox SearchChange={OnSearchChange} />
                 <Scroll>
                     <CardList robots={FilteredRobots} />
                     <h3>By Arsh Learn</h3>
@@ -46,6 +41,5 @@ class App extends React.Component {
             </div>
         ) 
         }
-    }
 }
 export default App
